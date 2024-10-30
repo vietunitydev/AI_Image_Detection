@@ -1,0 +1,1 @@
+print("BTL Python - init project")
