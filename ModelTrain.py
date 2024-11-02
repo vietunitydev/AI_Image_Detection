@@ -1,6 +1,7 @@
 #Convolutional neural network (CNN) model for image classification trained on a NVIDIA RTX 2060. Code loads the training and #testing data, constructs the CNN model with specific layers and activations, performs training on the GPU, and finally saves #the trained model along with the accuracy results.
 import tensorflow as tf
 from keras import layers
+import time
 from tqdm import tqdm
 import numpy as np
 import pickle as pkl
@@ -71,7 +72,7 @@ def train_model(model, train_data, test_data):
     # metrics=['accuracy'] được sử dụng để theo dõi độ chính xác của mô hình trong quá trình huấn luyện.
     model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     results = []
-    for epoch in range(10):
+    for epoch in tqdm(range(10)):
         total = 0
         print(f'---(Log) With epoch {epoch}')
 
@@ -113,7 +114,7 @@ def train_model(model, train_data, test_data):
             
             # Save results
             results.append([history.history['val_accuracy'][0], history.history['accuracy'][0]])
-    
+
     return results
 
 # Load test set
