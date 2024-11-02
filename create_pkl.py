@@ -1,60 +1,36 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.keys import Keys
-import time
-import os
-import urllib.request
-import ssl
+import numpy as np
+import tensorflow as tf
+from PIL import Image
+import webp
+import image
 
-# Bỏ qua SSL verification
-context = ssl._create_unverified_context()
+# Tải mô hình đã được huấn luyện
+model = tf.keras.models.load_model('/Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Image_Classifier/trained_model.keras')
 
-# Đường dẫn driver
-PATH = '/Users/sakai/Downloads/chromedriver-mac-arm64-2/chromedriver'
-driver = webdriver.Chrome(service=Service(PATH))
+def preprocess_image(image_path, target_size):
+    """Loads and preprocesses the image from the given path."""
+    img = Image.open(image_path).resize(target_size)
+    img = np.array(img.convert("RGB")) / 255.
+    img = np.expand_dims(img, axis=0)
+    return img
 
-# Thư mục lưu ảnh
-HUMAN = '/Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Human'
-urls = ['https://www.google.com/search?q=art+graphic+design&tbm=isch']
+def predict_image_class(img_path):
+    """Dự đoán lớp của ảnh: Con người hay AI."""
+    # Chuẩn bị ảnh
+    prepared_image = preprocess_image(img_path, (255,245))
 
-# Danh mục ảnh
-categories = ['a_graphic_design_art']
+    # Dự đoán lớp
+    predictions = model.predict(prepared_image)
 
-# Tải và lưu ảnh từ mỗi URL
-for idx, url in enumerate(urls):
-    driver.get(url)
-    time.sleep(2)  # Đợi trang tải xong
+    # Chuyển đổi dự đoán thành nhãn
+    predicted_label = np.argmax(predictions, axis=1)
 
-    # Cuộn trang để tải ảnh
-    body = driver.find_element(By.TAG_NAME, 'body')
-    for _ in range(10):
-        body.send_keys(Keys.PAGE_DOWN)
-        time.sleep(1)
+    # Xác định nhãn tương ứng
+    class_names = {0: "Con người", 1: "AI"}  # Điều chỉnh theo nhãn của bạn
+    predicted_class = class_names.get(predicted_label[0], "Không xác định")
 
-    # Tìm tất cả các ảnh sau khi cuộn
-    images = driver.find_elements(By.TAG_NAME, 'img')
-    os.makedirs(os.path.join(HUMAN, categories[idx]), exist_ok=True)
+    return predicted_class
 
-    # Duyệt và tải từng ảnh
-    for i, img in enumerate(images):
-        src = img.get_attribute('src')
-
-        # Kiểm tra thêm thuộc tính 'data-src' nếu 'src' rỗng
-        if not src:
-            src = img.get_attribute('data-src')
-
-        if src and 'http' in src:
-            try:
-                file_path = os.path.join(HUMAN, categories[idx], f'image_{i}.jpg')
-
-                # Tải ảnh với urlopen và bỏ qua xác minh SSL
-                with urllib.request.urlopen(src, context=context) as response, open(file_path, 'wb') as out_file:
-                    out_file.write(response.read())
-
-                print(f"Đã tải xong ảnh {i} từ '{categories[idx]}' - Lưu tại: {file_path}")
-
-            except Exception as e:
-                print(f"Lỗi khi tải ảnh {i}: {e}")
-
-driver.quit()
+img_path = '/Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Dataset/ai_generated/image_4.jpg'
+result = predict_image_class(img_path)
+print(f"Dự đoán: {result}")
