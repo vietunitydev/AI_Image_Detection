@@ -1,10 +1,8 @@
 #Convolutional neural network (CNN) model for image classification trained on a NVIDIA RTX 2060. Code loads the training and #testing data, constructs the CNN model with specific layers and activations, performs training on the GPU, and finally saves #the trained model along with the accuracy results.
-import pickle
-import numpy as np
-
 import tensorflow as tf
 from keras import layers
 from tqdm import tqdm
+import numpy as np
 import pickle as pkl
 import os
 import gc
@@ -12,7 +10,7 @@ import gc
 
 def check_pickle_file(file_path):
     with open(file_path, 'rb') as f:
-        data = pickle.load(f)
+        data = pkl.load(f)
 
     # Kiểm tra cấu trúc dữ liệu của file pickle
     if 'data' in data and 'labels' in data:
@@ -42,6 +40,14 @@ def check_pickle_file(file_path):
         print("File does not contain expected 'data' and 'labels' keys.")
 
 # Define the CNN model
+# Mô hình nhận đầu vào là các hình ảnh có kích thước 245 x 255 pixel với 3 kênh màu (RGB).
+# layers.Conv2D(32, (3, 3), activation='relu'), : Tạo một lớp tích chập với 32 bộ lọc, mỗi bộ lọc có kích thước 3x3, và sử dụng hàm kích hoạt ReLU (Rectified Linear Unit) để tạo ra các đặc trưng từ đầu vào.
+# layers.MaxPooling2D((2, 2)): Tạo một lớp lấy mẫu tối đa với kích thước 2x2 để giảm kích thước của đầu ra từ lớp tích chập, từ đó giúp giảm số lượng tham số và tính toán.
+# thực hiện hai lần một cặp lớp Conv2D và MaxPooling, giúp tăng cường khả năng trích xuất đặc trưng của mô hình.
+# layers.Flatten(): Làm phẳng đầu ra từ các lớp tích chập và lấy mẫu, chuyển đổi thành một mảng một chiều để chuẩn bị cho các lớp Dense.
+# layers.Dense(64, activation='relu'): Một lớp dày với 64 nơ-ron và hàm kích hoạt ReLU.
+# layers.Dense(3, activation='softmax'): Lớp đầu ra với 3 nơ-ron (tương ứng với 3 lớp mà bạn muốn phân loại) và hàm kích hoạt softmax, giúp xác định xác suất cho mỗi lớp
+
 def create_model():
     model = tf.keras.Sequential([
         layers.Input(shape=(245, 255, 3)),
@@ -58,7 +64,11 @@ def create_model():
 def train_model(model, train_data, test_data):
     print(f'---(Log) Start train .... ')
 
+    # tạo một optimizer Adam với tốc độ học (learning rate) được chỉ định là 0.00005
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.00005)
+
+    # biên dịch sử dụng categorical_crossentropy làm hàm mất mát.
+    # metrics=['accuracy'] được sử dụng để theo dõi độ chính xác của mô hình trong quá trình huấn luyện.
     model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
     results = []
     for epoch in range(10):
@@ -78,7 +88,26 @@ def train_model(model, train_data, test_data):
                 print("Found None values in test data!")
 
             # Train model
+
+            # model.fit: Đây là phương thức dùng để huấn luyện mô hình Keras với dữ liệu huấn luyện và gán giá trị cho các trọng số của mô hình dựa trên mất mát (loss) và độ chính xác (accuracy).
+            # epochs=1:
+            # Số lượng epoch là số lần mô hình sẽ duyệt qua toàn bộ dữ liệu huấn luyện.
+            # Trong trường hợp này, bạn chỉ đặt epochs=1, có nghĩa là mô hình sẽ chỉ huấn luyện một lần qua toàn bộ dữ liệu huấn luyện.
+            # Thường thì bạn sẽ tăng số lượng epoch này lên để cải thiện độ chính xác,
+            # nhưng có thể sẽ cần theo dõi để tránh tình trạng quá khớp (overfitting).
+
+            # alidation_data=(test_X, test_Y):
+            # validation_data: Là tham số cho phép bạn cung cấp dữ liệu kiểm tra (validation set) để đánh giá hiệu suất của mô hình sau mỗi epoch.
+            # test_X: Dữ liệu đầu vào dùng để kiểm tra mô hình (không tham gia vào quá trình huấn luyện).
+            # test_Y: Nhãn tương ứng với các mẫu trong test_X.
+            # Việc cung cấp dữ liệu kiểm tra giúp bạn theo dõi độ chính xác và mất mát của mô hình trên dữ liệu chưa thấy trong quá trình huấn luyện.
+
+            # Biến history sẽ chứa thông tin về quá trình huấn luyện, bao gồm giá trị mất mát (loss) và độ chính xác (accuracy) cho cả dữ liệu huấn luyện và kiểm tra qua mỗi epoch.
+            # Bạn có thể sử dụng history.history để truy cập các thông tin này sau khi huấn luyện xong, ví dụ để vẽ biểu đồ hoặc phân tích hiệu suất.
             history = model.fit(train_X, train_Y, epochs=1, validation_data=(test_X, test_Y))
+
+            # gc.collect() được gọi để thu gom bộ nhớ không còn được sử dụng.
+            # tf.keras.backend.clear_session() giúp giải phóng tài nguyên của phiên Keras trước đó, giúp tránh lỗi khi tái sử dụng mô hình.
             gc.collect()
             tf.keras.backend.clear_session()
             
@@ -104,6 +133,7 @@ for batch in os.listdir(batch_path):
         with open(batch_path + batch, 'rb') as f:
             # check_pickle_file(batch_path + batch)
             train_data.append(pkl.load(f))
+
 
 # Create and train the model
 model = create_model()
