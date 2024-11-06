@@ -25,8 +25,8 @@ def classify_image(image_path, model_path):
 
 
     # Preprocess the input image
-    img_array = preprocess_image(image_path, (255,245))
-    # img_array = preprocess_webp_image(image_path, (256, 256), (0, 0, 255, 245))
+    # img_array = preprocess_image(image_path, (255,245))
+    img_array = preprocess_webp_image(image_path, (256, 256), (0, 0, 255, 245))
 
     # Perform prediction
     predictions = model.predict(img_array)
@@ -51,9 +51,9 @@ def classify_image(image_path, model_path):
 
 
 # Test with an image path
-image_path = '/Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Dataset/human/00200.png'
-model_path = '/Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Image_Classifier/trained_model.keras'
-prediction, confidence = classify_image(image_path, model_path)
+# image_path = '/Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Dataset/human/00200.png'
+# model_path = '/Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Image_Classifier/trained_model.keras'
+# prediction, confidence = classify_image(image_path, model_path)
 
 # /Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Dataset/ai_generated/000072.jpg
 # /Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Dataset/human/00007.png
