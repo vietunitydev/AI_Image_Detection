@@ -90,14 +90,16 @@ def train_model(model, train_data, test_data):
 
             # Train model
 
-            # model.fit: Đây là phương thức dùng để huấn luyện mô hình Keras với dữ liệu huấn luyện và gán giá trị cho các trọng số của mô hình dựa trên mất mát (loss) và độ chính xác (accuracy).
+            # model.fit: Đây là phương thức dùng để huấn luyện mô hình Keras với dữ liệu huấn luyện
+            # và gán giá trị cho các trọng số của mô hình dựa trên mất mát (loss) và độ chính xác (accuracy).
+
             # epochs=1:
             # Số lượng epoch là số lần mô hình sẽ duyệt qua toàn bộ dữ liệu huấn luyện.
             # Trong trường hợp này, bạn chỉ đặt epochs=1, có nghĩa là mô hình sẽ chỉ huấn luyện một lần qua toàn bộ dữ liệu huấn luyện.
             # Thường thì bạn sẽ tăng số lượng epoch này lên để cải thiện độ chính xác,
             # nhưng có thể sẽ cần theo dõi để tránh tình trạng quá khớp (overfitting).
 
-            # alidation_data=(test_X, test_Y):
+            # validation_data=(test_X, test_Y):
             # validation_data: Là tham số cho phép bạn cung cấp dữ liệu kiểm tra (validation set) để đánh giá hiệu suất của mô hình sau mỗi epoch.
             # test_X: Dữ liệu đầu vào dùng để kiểm tra mô hình (không tham gia vào quá trình huấn luyện).
             # test_Y: Nhãn tương ứng với các mẫu trong test_X.
