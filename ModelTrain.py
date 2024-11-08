@@ -51,7 +51,7 @@ def check_pickle_file(file_path):
 
 def create_model():
     model = tf.keras.Sequential([
-        layers.Input(shape=(245, 255, 3)),
+        layers.Input(shape=(256, 256, 3)),
         layers.Conv2D(32, (3, 3), activation='relu'),
         layers.MaxPooling2D((2, 2)),
         layers.Conv2D(32, (3, 3), activation='relu'),

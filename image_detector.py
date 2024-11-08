@@ -9,24 +9,13 @@ def preprocess_image(image_path, target_size):
     img_arr = np.expand_dims(img_arr, axis=0)
     return img_arr
 
-
-def preprocess_webp_image(image_path, target_size, crop_size):
-    """Loads and preprocesses the WebP image from the given path."""
-    # print(image_path)
-    img = Image.open(image_path).convert('RGB')
-    img = img.resize(target_size)
-    img = img.crop(crop_size)
-    img_arr = np.array(img) / 255.
-    return np.expand_dims(img_arr,  axis=0)
-
 def classify_image(image_path, model_path):
     # Load the trained model
     model = tf.keras.models.load_model(model_path)
 
 
     # Preprocess the input image
-    # img_array = preprocess_image(image_path, (255,245))
-    img_array = preprocess_webp_image(image_path, (256, 256), (0, 0, 255, 245))
+    img_array = preprocess_image(image_path, (256,256))
 
     # Perform prediction
     predictions = model.predict(img_array)

@@ -9,7 +9,7 @@ def upload_image():
     if file_path:
         # Hiển thị ảnh đã chọn lên GUI
         img = Image.open(file_path)
-        img = img.resize((250, 250))
+        img = img.resize((256, 256))
         img_tk = ImageTk.PhotoImage(img)
         label_image.config(image=img_tk)
         label_image.image = img_tk
