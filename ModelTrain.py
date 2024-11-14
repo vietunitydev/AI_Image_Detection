@@ -1,7 +1,5 @@
-#Convolutional neural network (CNN) model for image classification trained on a NVIDIA RTX 2060. Code loads the training and #testing data, constructs the CNN model with specific layers and activations, performs training on the GPU, and finally saves #the trained model along with the accuracy results.
 import tensorflow as tf
 from keras import layers
-import time
 from tqdm import tqdm
 import numpy as np
 import pickle as pkl
@@ -41,7 +39,7 @@ def check_pickle_file(file_path):
         print("File does not contain expected 'data' and 'labels' keys.")
 
 # Define the CNN model
-# Mô hình nhận đầu vào là các hình ảnh có kích thước 245 x 255 pixel với 3 kênh màu (RGB).
+# Mô hình nhận đầu vào là các hình ảnh có kích thước 256 x 256 pixel với 3 kênh màu (RGB).
 # layers.Conv2D(32, (3, 3), activation='relu'), : Tạo một lớp tích chập với 32 bộ lọc, mỗi bộ lọc có kích thước 3x3, và sử dụng hàm kích hoạt ReLU (Rectified Linear Unit) để tạo ra các đặc trưng từ đầu vào.
 # layers.MaxPooling2D((2, 2)): Tạo một lớp lấy mẫu tối đa với kích thước 2x2 để giảm kích thước của đầu ra từ lớp tích chập, từ đó giúp giảm số lượng tham số và tính toán.
 # thực hiện hai lần một cặp lớp Conv2D và MaxPooling, giúp tăng cường khả năng trích xuất đặc trưng của mô hình.
@@ -58,7 +56,7 @@ def create_model():
         layers.MaxPooling2D((2, 2)),
         layers.Flatten(),
         layers.Dense(64, activation='relu'),
-        layers.Dense(3, activation='softmax')
+        layers.Dense(2, activation='softmax')
     ])
     return model
 
