@@ -120,7 +120,6 @@ def train_model(model, train_data, test_data):
 # Load test set
 with open('/Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Image_Classifier/test_batches/test_batch.pickle', 'rb') as f:
     test_data = pkl.load(f)
-# check_pickle_file('/Users/sakai/VIET_Working/STUDY_WORK/Ky5/Python/Image_Classifier/test_batches/test_batch.pickle')
 
 # Load train set
 train_data = []
@@ -130,9 +129,7 @@ valid_extensions = ['.pickle']
 
 for batch in os.listdir(batch_path):
     if os.path.splitext(batch)[1].lower() in valid_extensions:
-        # print(f'---(Log) List train patch {batch}')
         with open(batch_path + batch, 'rb') as f:
-            # check_pickle_file(batch_path + batch)
             train_data.append(pkl.load(f))
 
 
