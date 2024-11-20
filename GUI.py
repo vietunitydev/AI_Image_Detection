@@ -29,7 +29,7 @@ def showimage():
 # Display output
 def display_output():
     image_path = root.selected_img_path  # Corrected variable
-    model_path = 'Model_Trained/8-11/trained_model.keras'
+    model_path = 'Model_Trained/19-11/trained_model.keras'
 
     try:
         output1, output2 = image_detector.classify_image(image_path, model_path)
