@@ -34,10 +34,10 @@ def display_output():
     try:
         output1, output2 = image_detector.classify_image(image_path, model_path)
         if output1 == "AI":
-            tk.Label(frame, text=output1, font="arial 30 bold", bg="#FF9999", fg="#FF0000").place(x=225, y=190)
+            tk.Label(frame, text=output1, font="arial 30 bold", bg="#FF9999", fg="#FF0000", padx=50, pady=9).place(x=178, y=182)
             tk.Label(frame, text=round(output2, 4), font="arial 30 bold", bg="#FF9999").place(x=184, y=360)
         else:
-            tk.Label(frame, text=output1, font="arial 30 bold", bg="#FF9999", fg="#00FF00").place(x=182, y=190)
+            tk.Label(frame, text=output1, font="arial 30 bold", bg="#FF9999", fg="#00FF00", padx=30, pady=9).place(x=156, y=182)
             tk.Label(frame, text=round(output2, 4), font="arial 30 bold", bg="#FF9999").place(x=184, y=360)
     except Exception as e:
         print("Error in classification:", e)
