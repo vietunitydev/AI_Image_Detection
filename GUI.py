@@ -3,7 +3,7 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 import os
 import random
-import image_detector  # Ensure this module is available
+import Image_Detector  # Ensure this module is available
 
 root = tk.Tk()
 root.title("AI Detector")
