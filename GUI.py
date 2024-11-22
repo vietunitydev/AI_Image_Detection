@@ -3,7 +3,7 @@ from tkinter import filedialog
 from PIL import Image, ImageTk
 import os
 import random
-import image_detector  # Ensure this module is available
+import Image_Detector  # Ensure this module is available
 
 root = tk.Tk()
 root.title("AI Detector")
@@ -32,7 +32,7 @@ def display_output():
     model_path = 'Model_Trained/19-11/trained_model.keras'
 
     try:
-        output1, output2 = image_detector.classify_image(image_path, model_path)
+        output1, output2 = Image_Detector.classify_image(image_path, model_path)
         if output1 == "AI":
             tk.Label(frame, text=output1, font="arial 30 bold", bg="#FF9999", fg="#FF0000", padx=70, pady=9).place(x=160, y=182)
             tk.Label(frame, text=round(output2, 4), font="arial 30 bold", bg="#FF9999").place(x=184, y=360)
